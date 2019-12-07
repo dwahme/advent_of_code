@@ -1,9 +1,13 @@
 
 getFuel :: Int -> Int
-getFuel x = div x 3 - 2
+getFuel x = max 0 $ div x 3 - 2
+
+getRecursiveFuel :: Int -> Int
+getRecursiveFuel 0 = 0
+getRecursiveFuel x = getFuel x + getRecursiveFuel (getFuel x)
 
 getTotalFuel :: [Int] -> Int
-getTotalFuel = sum . map getFuel
+getTotalFuel = sum . map getRecursiveFuel
 
 getNums :: String -> [Int]
 getNums = map read . lines
