@@ -23,8 +23,17 @@ commaToSpace s = [if c == ',' then ' ' else c | c <- s]
 getNums :: String -> [Int]
 getNums = map read . words . commaToSpace
 
+findNounVerb :: [Int] -> [Int]
+findNounVerb (x:a:b:xs) = 
+    if head (step 0 (x:a:b:xs)) == 19690720
+    then x:a:b:xs
+    else if a == 99
+        then findNounVerb $ x:0:(b + 1):xs
+        else findNounVerb $ x:(a + 1):b:xs
+findNounVerb _ = [-1]
+
 runProgram :: String -> String
-runProgram s = show $ step 0 $ getNums s
+runProgram s = show $ findNounVerb $ getNums s
 
 main :: IO ()
 main = interact runProgram
