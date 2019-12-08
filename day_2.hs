@@ -1,25 +1,27 @@
 
-import Data.List
 
 calc :: (Int, Int, Int) -> [Int] -> Maybe Int
 calc (1, a, b) xs = Just $ (xs!!a) + (xs!!b)
 calc (2, a, b) xs = Just $ (xs!!a) * (xs!!b)
-calc _ xs = Nothing
+calc _ _ = Nothing
 
-step :: Int -> [Int] -> Int
+step :: Int -> [Int] -> [Int]
 step i xs = 
     let 
-        (ys, zs) = splitAt (xs!!(i + 3)) xs
+        (ys, _:zs) = splitAt (xs!!(i + 3)) xs
         op = xs!!i
         a = xs!!(i + 1)
         b = xs!!(i + 2)
     in 
         case calc (op, a, b) xs of
-            Nothing -> (xs!!0)
-            Just a -> step (i + 4) (ys ++ [a] ++ zs)
+            Just x -> step (i + 4) (ys ++ [x] ++ zs)
+            Nothing -> xs
+
+commaToSpace :: String -> String
+commaToSpace s = [if c == ',' then ' ' else c | c <- s]
 
 getNums :: String -> [Int]
-getNums = map read . (splitOn ", ")
+getNums = map read . words . commaToSpace
 
 runProgram :: String -> String
 runProgram s = show $ step 0 $ getNums s
