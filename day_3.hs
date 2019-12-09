@@ -1,3 +1,4 @@
+import Data.Maybe
 
 data Line = Ln (Int, Int) (Int, Int)
     deriving (Show, Eq)
@@ -6,7 +7,10 @@ data Instr = Ins Char Int
     deriving (Show, Eq)
 
 pointCmp :: (Int, Int) -> (Int, Int) -> Bool
-pointCmp (x0, y0) (x1, y1) = x0 + y0 < x1 + y1
+pointCmp (x0, y0) (x1, y1) = x0 + y0 >= x1 + y1
+
+min' :: (a -> a -> Bool) -> [a] -> a
+min' f (a:as) = foldl (\x y -> if f x y then x else y) a as
 
 makeMove :: [Line] -> Instr -> [Line]
 makeMove ((Ln p1 (x0, y0)):ls) (Ins 'D' i) = 
@@ -16,8 +20,12 @@ makeMove ((Ln p1 (x0, y0)):ls) (Ins 'U' i) =
 makeMove ((Ln p1 (x0, y0)):ls) (Ins 'L' i) = 
     Ln (x0, y0) ((x0 - i), y0) : Ln p1 (x0, y0) : ls
 makeMove ((Ln p1 (x0, y0)):ls) (Ins 'R' i) = 
-    Ln (x0, y0) ((x0 + i), y0) : Ln p1 (Pt x0 y0) : ls
+    Ln (x0, y0) ((x0 + i), y0) : Ln p1 (x0, y0) : ls
 makeMove g _ = g
+
+makeMoves :: [Line] -> [Instr] -> [Line]
+makeMoves g (i:is) = makeMoves (makeMove g i) is
+makeMoves g [] = g
 
 findIntersection :: Line -> Line -> Maybe (Int, Int)
 findIntersection (Ln (x0, y0) (x1, y1)) (Ln (i0, j0) (i1, j1))
@@ -35,16 +43,22 @@ findIntersection (Ln (x0, y0) (x1, y1)) (Ln (i0, j0) (i1, j1))
 
 getIntersections :: [Line] -> [(Int, Int)]
 getIntersections (l0:l1:ls) = 
-    mapMaybe (map (findIntersection l0)) ls
+    mapMaybe (\l -> findIntersection l0 l) ls
 
-commaToSpace :: String -> String
-commaToSpace s = [if c == ',' then ' ' else c | c <- s]
+moveAndIntersect :: [Instr] -> [(Int, Int)]
+moveAndIntersect is = getIntersections $ makeMoves [] is
 
 readInstr :: String -> Instr
 readInstr (c:i) = Ins c (read i)
 
-getInstr :: String -> [(Char, Int)]
-getInstr = map read . words . commaToSpace
+commaToSpace :: String -> String
+commaToSpace s = [if c == ',' then ' ' else c | c <- s]
+
+getInstrs :: String -> [Instr]
+getInstrs = map readInstr . words . commaToSpace
+
+run :: String -> String
+run s = show $ min' pointCmp . moveAndIntersect $ getInstrs s
 
 main :: IO ()
-main = interact id
+main = interact run
