@@ -13,12 +13,8 @@ def is_safe_report(lst):
     return (all_pos or all_neg) and all_in_range
 
 def try_safe_variations(lst):
-    result = is_safe_report(lst)
-
-    for i in range(len(lst)):
-        result = result or is_safe_report(lst[:i] + lst[i + 1:])
-
-    return result
+    variations = [lst[:i] + lst[i + 1:] for i in range(len(lst))]
+    return any([is_safe_report(v) for v in variations])
 
 def count_safe_reports(lines):
     safe_reports = [l for l in lines if is_safe_report(l)]
