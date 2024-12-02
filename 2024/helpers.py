@@ -1,12 +1,12 @@
 
-def _get_str_arg(arg):
-    str_arg = str(arg)
-        
+def _reduce_list(arg):
     if type(arg) == list and len(arg) > 2:
-        str_arg = str(arg[:2])
-        str_arg = str_arg[:-1] + ", ...]"
+        return [_reduce_list(a) for a in arg[:2]] + ["..."]
 
-    return str_arg
+    return arg
+
+def _get_str_arg(arg):
+    return str(_reduce_list(arg)).replace("'...'", "...")
 
 def call_and_print(fn, *args):
     str_args = ", ".join(_get_str_arg(arg) for arg in args)
