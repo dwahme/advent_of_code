@@ -2,9 +2,7 @@
 import helpers
 
 def is_safe_report(lst):
-    diffs = []
-    for i in range(len(lst) - 1):
-        diffs.append(lst[i] - lst[i + 1])
+    diffs = [lst[i] - lst[i + 1] for i in range(len(lst) - 1)]
     
     all_pos = all([i > 0 for i in diffs])
     all_neg = all([i < 0 for i in diffs])
