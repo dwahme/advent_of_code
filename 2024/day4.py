@@ -8,15 +8,8 @@ def look_in_direction(grid, i, j, x, y):
     return s == "XMAS" or s[::-1] == "XMAS"
 
 def task1(grid):
-
     base_dirs = [(0, 1), (1, 0), (1, 1), (-1, 1)]
-    sum = 0
-    for y in range(len(grid)):
-        for x in range(len(grid[y])):
-            for i, j in base_dirs:
-                sum += look_in_direction(grid, i, j, x, y)
-
-    return sum
+    return len([1 for y in range(len(grid)) for x in range(len(grid[y])) for (i, j) in base_dirs if look_in_direction(grid, i, j, x, y)])
 
 def task2(grid):
 
