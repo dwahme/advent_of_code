@@ -26,7 +26,7 @@ def get_input(file_code):
 
 def find_string_in_grid(grid: list[list[str]], string: str, x: int, y: int, dx: int, dy: int, allow_backwards=False):
     """
-    grid: a list of lists where the char at position (x, y) can be accessed with grid[y][x]
+    grid: a list of lists of chars where the char at position (x, y) can be accessed with grid[y][x]
     string: the string to find in the grid
     x, y: the starting position to begin searching for the string (the first letter of the string)
     dx, dy: the direction to search. (0, 1) will search one character to the right, etc
