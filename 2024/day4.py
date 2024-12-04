@@ -1,14 +1,11 @@
 import helpers
 
 def look_in_direction(grid, i, j, x, y):
+    if not (0 <= y + j*3 < len(grid)) or not (0 <= x + i*3 < len(grid[y + j*3])):
+        return False
 
-    for idx, char in enumerate("XMAS"):
-        if not (0 <= y + j*idx < len(grid)) or not (0 <= x + i*idx < len(grid[y + j*idx])):
-            return False
-        if grid[y + j*idx][x + i*idx] != char:
-            return False
-        
-    return True
+    s = "".join([grid[y + j*idx][x + i*idx] for idx in range(len("XMAS"))])
+    return s == "XMAS" or s[::-1] == "XMAS"
 
 def task1(grid):
 
@@ -18,7 +15,6 @@ def task1(grid):
         for x in range(len(grid[y])):
             for i, j in base_dirs:
                 sum += look_in_direction(grid, i, j, x, y)
-                sum += look_in_direction(grid, -i, -j, x, y)
 
     return sum
 
