@@ -13,10 +13,10 @@ def set_up_file_if_not_exists(path, file, source=None):
         if source is not None:
             sourcepath = os.path.join(path, source)
             print(f"Generating file {filepath}, copied from {sourcepath}")
-            # shutil.copy(sourcepath, filepath)
+            shutil.copy(sourcepath, filepath)
         else:
             print(f"Generating file {filepath}, creating blank file")
-            # open(filepath, "a").close()
+            open(filepath, "a").close()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Set up day N for Advent of Code")
