@@ -34,7 +34,6 @@ if __name__ == "__main__":
 
     python_filename = f"day{day_str}.py"
     set_up_file_if_not_exists(path, python_filename, "template.py")
-    # set_up_file_if_not_exists(path, python_filename)
 
     if args.samples:
         print()
