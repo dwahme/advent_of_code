@@ -1,68 +1,54 @@
 import helpers
 
+GUARDS = "^>V<"
+DX_DYS = [(0, -1), (1, 0), (0, 1), (-1, 0)]
+
 def get_next_move(grid, guard_x, guard_y):
-    if grid[guard_y][guard_x] == "^":
-        return guard_x, guard_y - 1
-    if grid[guard_y][guard_x] == ">":
-        return guard_x + 1, guard_y
-    if grid[guard_y][guard_x] == "V":
-        return guard_x, guard_y + 1
-    if grid[guard_y][guard_x] == "<":
-        return guard_x - 1, guard_y
+    dx, dy = DX_DYS[GUARDS.index(grid[guard_y][guard_x])]
+    return guard_x + dx, guard_y + dy
 
 def dump_grid(grid):
-    # return
     for line in grid:
         print("".join(line))
 
+def run_sim(starting_grid, barrier_x=None, barrier_y=None):
 
-def run_sim(grid):
-
+    grid = [l.copy() for l in starting_grid]
     cur_y = [y for y in range(len(grid)) if "^" in grid[y]][0]
     cur_x = [x for x in range(len(grid[cur_y])) if "^" in grid[cur_y][x]][0]
-
-    guards = "^>V<"
+    
+    if barrier_x and barrier_y:
+        grid[barrier_y][barrier_x] = "O"
 
     move_list = set()
 
-    # for _ in range(10000000000):
     while True:
-        # input("Press Enter to continue...")
         new_x, new_y = get_next_move(grid, cur_x, cur_y)
 
+        # infinite loop detected
         move = ((cur_x, cur_y), (new_x, new_y))
         if move in move_list:
-            # print("loop detected")
             return grid, True
 
-        # if new_y >= len(grid) or new_x >= len(grid[new_y]):
+        # guard walked off grid
         if not (0 <= new_y < len(grid)) or not (0 <= new_x < len(grid[new_y])):
             grid[cur_y][cur_x] = "X"
-            break
+            return grid, False
 
+        # rotate the guard
         if grid[new_y][new_x] == "#" or grid[new_y][new_x] == "O":
-            # print("rotating guard")
-            # print(guards.index(grid[cur_y][cur_x]) + 1)
-            # print(len(guards))
-            grid[cur_y][cur_x] = guards[(guards.index(grid[cur_y][cur_x]) + 1) % len(guards)]
+            grid[cur_y][cur_x] = GUARDS[(GUARDS.index(grid[cur_y][cur_x]) + 1) % len(GUARDS)]
 
-            # infinite loop detected
+        # move the guard
         else:
-            # print("moving guard")
-            grid[new_y][new_x] = grid[cur_y][cur_x]
-            grid[cur_y][cur_x] = "X"
+            grid[new_y][new_x], grid[cur_y][cur_x] = grid[cur_y][cur_x], "X"
             move_list.add(move)
             cur_x, cur_y = new_x, new_y
-        
-    #     dump_grid(grid)
-    # dump_grid(grid)
 
-    return grid, False
+    return None
 
 def task1(grid):
-
     new_grid, _ = run_sim(grid)
-        
     return sum([c == "X" for row in new_grid for c in row])
 
 
