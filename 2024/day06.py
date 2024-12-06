@@ -60,12 +60,8 @@ def task2(grid, start_x, start_y):
     for y in range(len(grid)):
         for x in range(len(grid[y])):
             if solved_grid[y][x] == "X":
-                new_grid = [l.copy() for l in grid]
-                _, loop_detected = run_sim(new_grid, start_x, start_y, x, y)
-                
-                if loop_detected:
-                    # dump_grid(new_grid)
-                    total += 1
+                _, loop_detected = run_sim(grid, start_x, start_y, x, y)
+                total += loop_detected
 
     return total
 
