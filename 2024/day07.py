@@ -4,7 +4,7 @@ def try_op(target, cur, lst, bar=False):
     if not lst:
         return cur == target
 
-    x, rest = lst[0], lst[1:]
+    x, *rest = lst
     return try_op(target, cur + x, rest, bar) or try_op(target, cur * x, rest, bar) or (bar and try_op(target, int(f"{cur}{x}"), rest, bar))
 
 def task1(data):
