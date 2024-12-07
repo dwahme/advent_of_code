@@ -1,48 +1,22 @@
 import helpers
 
-def try_op(target, cur_total, lst, allow_bar=False):
-    # print(f"trying to hit {target} from {cur_total}... {lst}")
+def try_op(target, cur, lst, bar=False):
     if not lst:
-        # if cur_total == target:
-            # print("found!")
-        return cur_total == target
+        return cur == target
 
     x, rest = lst[0], lst[1:]
-
-    add = try_op(target, cur_total + x, rest, allow_bar=allow_bar)
-    mul = try_op(target, cur_total * x, rest, allow_bar=allow_bar)
-
-    bar = False
-    if allow_bar:
-        bar = try_op(target, int(str(cur_total) + str(x)), rest, allow_bar=allow_bar)
-
-    return add or mul or bar
+    return try_op(target, cur + x, rest, bar) or try_op(target, cur * x, rest, bar) or (bar and try_op(target, int(f"{cur}{x}"), rest, bar))
 
 def task1(data):
-
-    total = 0
-    for target, lst in data:
-        # print(target, lst, try_operations(target, lst))
-        # total += target if try_operations(target, lst) else 0
-        total += target if try_op(target, 0, lst) else 0
-
-    return total
+    return sum(target for target, lst in data if try_op(target, 0, lst))
 
 def task2(data):
-
-    total = 0
-    for target, lst in data:
-        # print(target, lst, try_operations(target, lst))
-        total += target if try_op(target, 0, lst, allow_bar=True) else 0
-    return total
+    return sum(target for target, lst in data if try_op(target, 0, lst, bar=True))
 
 if __name__ == "__main__":
     lines = helpers.get_input("07")
     lines = [l.strip().split() for l in lines]
-
     data = [(int(l[0][:-1]), [int(i) for i in l[1:]]) for l in lines]
-    for d in data:
-        print(d)
     
     print(task1(data))
     print(task2(data))
