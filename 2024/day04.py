@@ -1,17 +1,23 @@
 import helpers
+from grid import *
 
-def task1(grid):
+def check_string(g, x, y, dx, dy, string):
+    return g.get_many([(x + dx * i, y + dy * i) for i in range(len(string))]) in [list(string), list(string[::-1])]
+
+def task1(lines):
+    g = Grid(lines, sep="")
     base_dirs = [(0, 1), (1, 0), (1, 1), (-1, 1)]
-    return sum([helpers.find_string_in_grid(grid, "XMAS", x, y, dx, dy, allow_backwards=True) for y in range(len(grid)) for x in range(len(grid[y])) for (dx, dy) in base_dirs])
+    return sum(check_string(g, x, y, dx, dy, "XMAS") for x, y in g.iterate_xy() for dx, dy in base_dirs)
 
-def check_cross(grid, x, y):
-    if grid[y][x] != "A":
+def check_cross(g, x, y):
+    if g.get(x, y) != "A":
         return False
 
-    return set(list("MS")) == set(grid[y+1][x+1] + grid[y-1][x-1]) == set(grid[y+1][x-1] + grid[y-1][x+1])
+    return set(g.get_many([(x+1, y+1), (x-1, y-1)])) == set("MS") and set(g.get_many([(x-1, y+1), (x+1, y-1)])) == set("MS")
 
-def task2(grid):
-    return sum([check_cross(grid, x, y) for y in range(1, len(grid) - 1) for x in range(1, len(grid[y]) - 1)])
+def task2(lines):
+    g = Grid(lines)
+    return sum([check_cross(g, x, y) for x, y in g.iterate_xy()])
 
 if __name__ == "__main__":
     lines = helpers.get_input("04")

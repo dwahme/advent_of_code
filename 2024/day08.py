@@ -11,7 +11,7 @@ def task1(lines):
                 if (x, y) != (new_x, new_y) and g.get(x, y) == g.get(new_x, new_y):
                     dx = abs(x - new_x) * (-1 if new_x > x else 1)
                     dy = abs(y - new_y) * (-1 if new_y > y else 1)
-                    out.set("#", x + dx, y + dy)
+                    out.set(x + dx, y + dy, "#")
 
     return sum(out.get(x, y) == "#" for x, y in out.iterate_xy())
 
@@ -28,7 +28,7 @@ def task2(lines):
 
                     i = 0
                     while g.get(x + dx * i, y + dy * i):
-                        out.set("#", x + dx * i, y + dy * i)
+                        out.set(x + dx * i, y + dy * i, "#")
                         i += 1
 
     return sum(out.get(x, y) == "#" for x, y in out.iterate_xy())

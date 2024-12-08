@@ -19,53 +19,25 @@ class Grid:
     def copy(self):
         return Grid([ row.copy() for row in self.grid ], sep=self.sep)
     
-    def _max_x(self):
-        return len(self.grid[0]) - 1
+    def in_bounds(self, x, y):
+        return 0 <= y < len(self.grid) and 0 <= x < len(self.grid[y])
     
-    def _max_y(self):
-        return len(self.grid) - 1
+    def get(self, x, y):
+        if not self.in_bounds(x, y):
+            return None
+        return self.grid[y][x]
+    
+    def set(self, x, y, val):
+        if not self.in_bounds(x, y):
+            return None
+        self.grid[y][x] = val
+        return self
     
     def iterate_xy(self):
         return ((x, y) for y in range(len(self.grid)) for x in range(len(self.grid)))
-    
-    def get(self, x, y, dx=0, dy=0):
-        if not (0 <= y + dy <= self._max_y()) or not (0 <= x + dx <= self._max_x()):
-            return None
-        return self.grid[y + dy][x + dx]
 
-    def set(self, val, x, y, dx=0, dy=0):
-        if not (0 <= y + dy <= self._max_y()) or not (0 <= x + dx <= self._max_x()):
-            return None
-        
-        self.grid[y + dy][x + dx] = val
-        return self
-    
-    def check(self, expected, x, y, dx=0, dy=0):
-        return self.get(x, y, dx, dy) == expected
-    
-    # def get_many(self, x, y, dxs, dys):
-    #     if len(dxs) != len(dys):
-    #         return None
-    #     return [self.get(x, y, dxs[i], dys[i]) for i in len(dxs)]
-    
-    def get_p(self, point, d_point=Point((0, 0))):
-        return self.get(point.x, point.y, d_point.x, d_point.y)
-    
-    # def get_p_many(self, point, d_points=[]):
-    #     return [self.get(point.x, point.y, d_point.x, d_point.y) for d_point in d_points]
-
-    def find_string_in_grid(grid: list[list[str]], string: str, x: int, y: int, dx: int, dy: int, allow_backwards=False):
-        
-        str_end = len(string) - 1
-        if not (0 <= y + dy*str_end < len(grid)) or not (0 <= x + dx*str_end < len(grid[y + dy*str_end])):
-            return False
-
-        s = "".join([grid[y + dy*idx][x + dx*idx] for idx in range(len(string))])
-        return s == string or (allow_backwards and s[::-1] == string)
-
-    def find_items_in_grid(self, origin_point, d_points, possible_items):
-        found = [ self.get_p(origin_point, d_point) for d_point in d_points ]
-        return found in possible_items
+    def get_many(self, xys):
+        return [ self.get(x, y) for x, y in xys ]
     
     def map(self, f):
         return Grid([[ f(self.get(x, y)) for x in range(len(self.grid[y])) ] for y in range(len(self.grid))], sep=self.sep)
