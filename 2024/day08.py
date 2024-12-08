@@ -3,75 +3,38 @@ from grid import *
 
 def task1(lines):
     g = Grid(lines, sep="")
-    out = g.copy()
-    
-    for y in out.grid:
-        for x in range(len(y)):
-            y[x] = "."
-    
-    # print(g)
-    # print()
-    # print(out)
+    out = g.map(lambda _: ".")
 
-    for y in range(len(g.grid)):
-        for x in range(len(g.grid[y])):
-            if g.grid[y][x] != ".":
+    for x, y in g.iterate_xy():
+        if g.get(x, y) != ".":
+            for new_x, new_y in g.iterate_xy():
+                if (x, y) != (new_x, new_y) and g.get(x, y) == g.get(new_x, new_y):
+                    dx = abs(x - new_x) * (-1 if new_x > x else 1)
+                    dy = abs(y - new_y) * (-1 if new_y > y else 1)
+                    out.set("#", x + dx, y + dy)
 
-                # prob can start at y here
-                for new_y in range(len(g.grid)):
-                    for new_x in range(len(g.grid[y])):
-                        if g.grid[y][x] == g.grid[new_y][new_x] and y != new_y and x != new_x:
-
-                            set_y = y + (abs(y - new_y) * (-1 if new_y > y else 1))
-                            set_x = x + (abs(x - new_x) * (-1 if new_x > x else 1))
-
-                            if g.get(set_x, set_y):
-                                out.grid[set_y][set_x] = "#"
-
-
-    # print()
-    # print(out)
-    return sum(out.grid[y][x] == "#" for y in range(len(out.grid)) for x in range(len(out.grid[y])))
+    return sum(out.get(x, y) == "#" for x, y in out.iterate_xy())
 
 def task2(lines):
     g = Grid(lines, sep="")
-    out = g.copy()
-    
-    for y in out.grid:
-        for x in range(len(y)):
-            y[x] = "."
-    
-    # print(g)
-    # print()
-    # print(out)
+    out = g.map(lambda _: ".")
 
-    for y in range(len(g.grid)):
-        for x in range(len(g.grid[y])):
-            if g.grid[y][x] != ".":
-                print(x, y)
+    for x, y in g.iterate_xy():
+        if g.get(x, y) != ".":
+            for new_x, new_y in g.iterate_xy():
+                if (x, y) != (new_x, new_y) and g.get(x, y) == g.get(new_x, new_y):
+                    dx = abs(x - new_x) * (-1 if new_x > x else 1)
+                    dy = abs(y - new_y) * (-1 if new_y > y else 1)
 
-                # prob can start at y here
-                for new_y in range(len(g.grid)):
-                    for new_x in range(len(g.grid[y])):
-                        if g.grid[y][x] == g.grid[new_y][new_x] and y != new_y and x != new_x:
+                    i = 0
+                    while g.get(x + dx * i, y + dy * i):
+                        out.set("#", x + dx * i, y + dy * i)
+                        i += 1
 
-                            dy = (abs(y - new_y) * (-1 if new_y > y else 1))
-                            dx = (abs(x - new_x) * (-1 if new_x > x else 1))
-
-                            for i in range(0, len(g.grid)):
-                                if g.get(x + dx * i, y + dy * i):
-                                    out.grid[y + dy * i][x + dx * i] = "#"
-                                else:
-                                    break
-
-
-    print()
-    print(out)
-    return sum(out.grid[y][x] == "#" for y in range(len(out.grid)) for x in range(len(out.grid[y])))
+    return sum(out.get(x, y) == "#" for x, y in out.iterate_xy())
 
 if __name__ == "__main__":
     lines = helpers.get_input("08")
-    # lines = helpers.get_input("sample-08-02")
     lines = [l.strip() for l in lines]
     
     print(task1(lines))

@@ -25,6 +25,9 @@ class Grid:
     def _max_y(self):
         return len(self.grid) - 1
     
+    def iterate_xy(self):
+        return ((x, y) for y in range(len(self.grid)) for x in range(len(self.grid)))
+    
     def get(self, x, y, dx=0, dy=0):
         if not (0 <= y + dy <= self._max_y()) or not (0 <= x + dx <= self._max_x()):
             return None
@@ -65,10 +68,10 @@ class Grid:
         return found in possible_items
     
     def map(self, f):
-        for row in self.grid:
-            for elem in row:
-                f(elem)
-        return self
+        return Grid([[ f(self.get(x, y)) for x in range(len(self.grid[y])) ] for y in range(len(self.grid))], sep=self.sep)
+    
+    def map_xy(self, f):
+        return Grid([[ f(x, y) for x in range(len(self.grid[y])) ] for y in range(len(self.grid))], sep=self.sep)
 
 if __name__ == "__main__":
     d = [ [1,2,3], [4,5,6], [7,8,9] ]
