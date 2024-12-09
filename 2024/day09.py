@@ -5,15 +5,15 @@ def expand(compressed):
     out = []
 
     for i in range(0, len(compressed), 2):
-        out += [ str(i // 2) ] * int(compressed[i])
+        out += [ i // 2 ] * int(compressed[i])
 
         if i < len(compressed) - 1:
-            out += [ "." ] * int(compressed[i + 1])
+            out += [ None ] * int(compressed[i + 1])
     
     return out
 
 def checksum(disk_map):
-    return sum([ int(val) * i for i, val in enumerate(disk_map) if val != "."])
+    return sum([ val * i for i, val in enumerate(disk_map) if val is not None])
 
 def task1(lines):
     disk_map = expand(lines[0])
@@ -21,7 +21,7 @@ def task1(lines):
     prev_found = len(disk_map)
 
     for i in range(len(disk_map)):
-        if disk_map[i] == ".":
+        if disk_map[i] is None:
             for j in range(prev_found - 1, i, -1):
                 if disk_map[j] != disk_map[i]:
                     disk_map[i], disk_map[j] = disk_map[j], disk_map[i]
@@ -40,27 +40,27 @@ def find_first_gap(disk_map, target_len, end):
         if idx + target_len > end:
             return None
 
-        if val == ".":
-            if all(disk_map[idx + i] == "." for i in range(target_len)):
+        if val is None:
+            if all(disk_map[idx + i] is None for i in range(target_len)):
                 return idx
     return None
 
 def task2(lines):
     
     # (block value, num spaces)
-    data = [ (str(idx // 2) if idx % 2 == 0 else ".", int(val)) for idx, val in enumerate(lines[0]) ]
+    data = [ (idx // 2 if idx % 2 == 0 else None, int(val)) for idx, val in enumerate(lines[0]) ]
     
     for i in range(len(data) - 1, -1, -1):
         block_value, block_spaces = data[i]
 
-        if block_value != ".":
+        if block_value is not None:
             for j in range(i):
                 target_value, target_spaces = data[j]
 
-                if target_value == "." and target_spaces >= block_spaces:
+                if target_value is None and target_spaces >= block_spaces:
                     data[j] = (block_value, block_spaces)
-                    data[i] = (".", block_spaces)
-                    data.insert(j + 1, (".", target_spaces - block_spaces))
+                    data[i] = (None, block_spaces)
+                    data.insert(j + 1, (None, target_spaces - block_spaces))
                     break
 
     expanded = [[val] * num for val, num in data if num > 0]
