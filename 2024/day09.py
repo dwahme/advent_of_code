@@ -12,10 +12,8 @@ def expand(compressed):
     
     return out
 
-
 def checksum(disk_map):
     return sum([ int(val) * i for i, val in enumerate(disk_map) if val != "."])
-
 
 def task1(lines):
     disk_map = expand(lines[0])
@@ -48,32 +46,26 @@ def find_first_gap(disk_map, target_len, end):
     return None
 
 def task2(lines):
+    
+    # (block value, num spaces)
+    data = [ (str(idx // 2) if idx % 2 == 0 else ".", int(val)) for idx, val in enumerate(lines[0]) ]
+    
+    for i in range(len(data) - 1, -1, -1):
+        block_value, block_spaces = data[i]
 
-    disk_map = expand(lines[0])
+        if block_value != ".":
+            for j in range(i):
+                target_value, target_spaces = data[j]
 
-    idx = len(disk_map)
-    while idx > 0:
-        if idx % 1000 == 0:
-            print(f"{idx} / {len(disk_map)}")
-        idx -= 1
+                if target_value == "." and target_spaces >= block_spaces:
+                    data[j] = (block_value, block_spaces)
+                    data[i] = (".", block_spaces)
+                    data.insert(j + 1, (".", target_spaces - block_spaces))
+                    break
 
-        val = disk_map[idx]
-        block_end = idx
-
-        # we found a block, try to move it
-        if val != ".":
-            # get the full block
-            while idx > 0 and disk_map[idx - 1] == val:
-                idx -= 1
-
-            # look for a gap to move the block to
-            gap_len = block_end - idx + 1
-            gap_start = find_first_gap(disk_map, gap_len, idx)
-
-            if gap_start is not None:
-                swap_region(disk_map, gap_start, idx, gap_len)
-
-    return checksum(disk_map)
+    expanded = [[val] * num for val, num in data if num > 0]
+    flattened = [x for xs in expanded for x in xs]
+    return checksum(flattened)
 
 if __name__ == "__main__":
     lines = helpers.get_input("09")
