@@ -43,12 +43,16 @@ def task2(lines):
                 target_value, target_spaces = data[j]
 
                 if target_value is None and target_spaces >= block_spaces:
+                    # swap the data
                     data[j] = (block_value, block_spaces)
                     data[i] = (None, block_spaces)
-                    data.insert(j + 1, (None, target_spaces - block_spaces))
+
+                    # we had leftover space, make sure it doesn't disappear
+                    if target_spaces > block_spaces:
+                        data.insert(j + 1, (None, target_spaces - block_spaces))
                     break
 
-    expanded = [[val] * num for val, num in data if num > 0]
+    expanded = [[val] * num for val, num in data]
     flattened = [x for xs in expanded for x in xs]
     return checksum(flattened)
 
