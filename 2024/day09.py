@@ -23,8 +23,9 @@ def task1(lines):
     for i in range(len(disk_map)):
         if disk_map[i] is None:
             for j in range(prev_found - 1, i, -1):
-                if disk_map[j] != disk_map[i]:
-                    disk_map[i], disk_map[j] = disk_map[j], disk_map[i]
+                if disk_map[j] is not None:
+                    disk_map[i] = disk_map[j]
+                    disk_map[j] = None
                     prev_found = j
                     break
 
