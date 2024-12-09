@@ -29,21 +29,6 @@ def task1(lines):
                     break
 
     return checksum(disk_map)
-    
-
-def swap_region(disk_map, start1, start2, amount):
-    for i in range(amount):
-        disk_map[start1 + i], disk_map[start2 + i] = disk_map[start2 + i], disk_map[start1 + i]
-
-def find_first_gap(disk_map, target_len, end):
-    for idx, val in enumerate(disk_map):
-        if idx + target_len > end:
-            return None
-
-        if val is None:
-            if all(disk_map[idx + i] is None for i in range(target_len)):
-                return idx
-    return None
 
 def task2(lines):
     
