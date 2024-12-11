@@ -1,4 +1,4 @@
-import helpers
+from helpers import *
 from grid import *
 
 def check_string(g, x, y, dx, dy, string):
@@ -20,7 +20,7 @@ def task2(lines):
     return sum([check_cross(g, x, y) for x, y in g.iterate_xy()])
 
 if __name__ == "__main__":
-    lines = helpers.get_input("04")
+    lines = get_input("04")
     lines = [l.strip() for l in lines]
     
     print(task1(lines))

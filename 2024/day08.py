@@ -1,4 +1,4 @@
-import helpers
+from helpers import *
 from grid import *
 
 def task1(lines):
@@ -34,7 +34,7 @@ def task2(lines):
     return sum(out.get(x, y) == "#" for x, y in out.iterate_xy())
 
 if __name__ == "__main__":
-    lines = helpers.get_input("08")
+    lines = get_input("08")
     lines = [l.strip() for l in lines]
     
     print(task1(lines))

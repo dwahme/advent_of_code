@@ -1,5 +1,5 @@
 
-import helpers
+from helpers import *
 import re
 
 def get_tokens(s):
@@ -20,7 +20,7 @@ def evaluate(tuples, ignore_dont=True):
     return sum
 
 if __name__ == "__main__":
-    lines = helpers.get_input("03")
+    lines = get_input("03")
 
     s = "".join(lines)
 

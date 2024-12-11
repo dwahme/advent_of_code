@@ -1,4 +1,14 @@
 
+UP = (0, 1)
+DOWN = (0, -1)
+RIGHT = (0, 1)
+LEFT = (-1, 0)
+
+CARDINAL_DIRS = [UP, DOWN, LEFT, RIGHT]
+
+def add_tup(t1, t2):
+    return (t1[0] + t2[0], t1[1] + t2[1])
+
 class Point:
 
     def __init__(self, xy):

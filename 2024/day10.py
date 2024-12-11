@@ -1,29 +1,15 @@
-import helpers
+from helpers import *
 from grid import *
 
-def get_reachable(g: Grid, x, y):
-    val, _ = g.get(x, y)
-    
+def get_reachable(g: Grid, x, y, cur_height):
     search = [g.get(x + 1, y), g.get(x - 1, y), g.get(x, y + 1), g.get(x, y - 1)]
-
-    found = set()
-    for i in search:
-        if i is not None:
-            height, reachable = i
-            if height is not None and height - 1 == val and reachable is not None:
-                found |= reachable
-
-    return found
-
-def get_score(g: Grid, x, y):
-    val, _ = g.get(x, y)
-    
-    search = [g.get(x + 1, y), g.get(x - 1, y), g.get(x, y + 1), g.get(x, y - 1)]
-
     search = [s for s in search if s]
-    scores = sum(score for target, score in search if target == val + 1 and score is not None)
+    return { r for height, reachable in search for r in reachable if height - 1 == cur_height and reachable is not None }
 
-    return scores
+def get_score(g: Grid, x, y, cur_height):    
+    search = [g.get(x + 1, y), g.get(x - 1, y), g.get(x, y + 1), g.get(x, y - 1)]
+    search = [s for s in search if s]
+    return sum(score for height, score in search if height - 1 == cur_height and score is not None)
 
 def task1(lines):
     
@@ -37,7 +23,7 @@ def task1(lines):
     for i in range(8, -1, -1):
         for x, y in g.iterate_xy():
             if g.get(x, y)[0] == i:
-                reachable = get_reachable(g, x, y)
+                reachable = get_reachable(g, x, y, i)
                 g.set(x, y, (i, reachable))
 
 
@@ -56,13 +42,13 @@ def task2(lines):
     for i in range(8, -1, -1):
         for x, y in g.iterate_xy():
             if g.get(x, y)[0] == i:
-                score = get_score(g, x, y)
+                score = get_score(g, x, y, i)
                 g.set(x, y, (i, score))
 
     return sum(g.get(x, y)[1] for x, y in g.iterate_xy() if g.get(x, y)[0] == 0)
 
 if __name__ == "__main__":
-    lines = helpers.get_input("10")
+    lines = get_input("10")
     lines = [l.strip() for l in lines]
     
     print(task1(lines))

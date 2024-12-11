@@ -1,4 +1,4 @@
-import helpers
+from helpers import *
 
 GUARDS = "^>V<"
 DX_DYS = [(0, -1), (1, 0), (0, 1), (-1, 0)]
@@ -66,7 +66,7 @@ def task2(grid, start_x, start_y):
     return total
 
 if __name__ == "__main__":
-    lines = helpers.get_input("06")
+    lines = get_input("06")
     lines = [list(l.strip()) for l in lines]
 
     start_y = [y for y in range(len(lines)) if "^" in lines[y]][0]

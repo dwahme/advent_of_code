@@ -1,4 +1,4 @@
-import helpers
+from helpers import *
 import functools
 
 def get_middle(lst):
@@ -11,7 +11,7 @@ def task2(compare_pages, pages_list):
     return sum(get_middle(sorted(pages, key=compare_pages)) for pages in pages_list if pages != sorted(pages, key=compare_pages))
 
 if __name__ == "__main__":
-    lines = helpers.get_input("05")
+    lines = get_input("05")
     lines = [l.strip() for l in lines]
 
     split_index = lines.index("")

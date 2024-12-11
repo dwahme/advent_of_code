@@ -1,4 +1,4 @@
-import helpers
+from helpers import *
 
 def try_op(target, cur, lst, bar=False):
     if not lst:
@@ -14,7 +14,7 @@ def task2(data):
     return sum(target for target, lst in data if try_op(target, 0, lst, bar=True))
 
 if __name__ == "__main__":
-    lines = helpers.get_input("07")
+    lines = get_input("07")
     lines = [l.strip().split() for l in lines]
     data = [(int(l[0][:-1]), [int(i) for i in l[1:]]) for l in lines]
     

@@ -1,4 +1,4 @@
-import helpers
+from helpers import *
 
 def expand(compressed):
 
@@ -58,9 +58,9 @@ def task2(lines):
     return checksum(flattened)
 
 if __name__ == "__main__":
-    lines = helpers.get_input("09")
-    # lines = helpers.get_input("sample-09-01")
-    # lines = helpers.get_input("sample-09-02")
+    lines = get_input("09")
+    # lines = get_input("sample-09-01")
+    # lines = get_input("sample-09-02")
     lines = [l.strip() for l in lines]
     
     print(task1(lines))
