@@ -1,36 +1,25 @@
 from helpers import *
+import functools
 
-def blink(stone):
+@functools.cache
+def blink_recurse(stone, depth):
+    if depth <= 0:
+        return 1
+    
     if stone == 0:
-        return [1]
+        return blink_recurse(1, depth - 1)
     
     s = str(stone)
     if len(s) % 2 == 0:
-        return [int(s[:len(s) // 2]), int(s[len(s) // 2:])]
+        return blink_recurse(int(s[:len(s) // 2]), depth - 1) + blink_recurse(int(s[len(s) // 2:]), depth - 1)
     
-    return [stone * 2024]
-
-def count_stones(stones, iterations):
-    prev_counts = { stone: stones.count(stone) for stone in set(stones) }
-
-    for _ in range(iterations):
-
-        stone_counts = {}
-        for stone, prev_count in prev_counts.items():
-            blinked = blink(stone)
-
-            for b in blinked:
-                stone_counts[b] = stone_counts.get(b, 0) + prev_count
-
-        prev_counts = stone_counts
-
-    return sum(val for val in stone_counts.values())
+    return blink_recurse(stone * 2024, depth - 1)
 
 def task1(stones):
-    return count_stones(stones, 25)
+    return sum(blink_recurse(stone, 25) for stone in stones)
 
 def task2(stones):
-    return count_stones(stones, 75)
+    return sum(blink_recurse(stone, 75) for stone in stones)
 
 if __name__ == "__main__":
     lines = get_input("sample-11-01")
