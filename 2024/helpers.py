@@ -1,4 +1,4 @@
-from typing import Any, Iterable
+from typing import Any, Iterable, Tuple
 
 def _reduce_list(arg):
     if type(arg) == list and len(arg) > 2:
@@ -27,3 +27,11 @@ def get_input(file_code):
 
 def flatten(nested_list: Iterable[Iterable[Any]]):
     return [x for xs in nested_list for x in xs]
+
+def tup_op(f, tup1, tup2):
+    return tuple(map(f), zip(tup1, tup2))
+
+ADD = lambda a, b: a + b
+SUB = lambda a, b: a - b
+MUL = lambda a, b: a * b
+DIV = lambda a, b: a / b

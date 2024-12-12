@@ -1,21 +1,17 @@
+from helpers import *
 
 UP = (0, 1)
 DOWN = (0, -1)
-RIGHT = (0, 1)
+RIGHT = (1, 0)
 LEFT = (-1, 0)
+UP_R = (1, 1)
+UP_L = (-1, 1)
+DOWN_R = (1, -1)
+DOWN_L = (-1, -1)
 
 CARDINAL_DIRS = [UP, DOWN, LEFT, RIGHT]
-
-def add_tup(t1, t2):
-    return (t1[0] + t2[0], t1[1] + t2[1])
-
-class Point:
-
-    def __init__(self, xy):
-        self.x, self.y = xy
-    
-    def __repr__(self):
-        return f"Point({self.x}, {self.x})"
+DIAG_DIRS = [UP_R, UP_L, DOWN_R, DOWN_L]
+ALL_DIRS = CARDINAL_DIRS + DIAG_DIRS
 
 class Grid:
 

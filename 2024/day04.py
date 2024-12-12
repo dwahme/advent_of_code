@@ -2,12 +2,11 @@ from helpers import *
 from grid import *
 
 def check_string(g, x, y, dx, dy, string):
-    return g.get_many([(x + dx * i, y + dy * i) for i in range(len(string))]) in [list(string), list(string[::-1])]
+    return g.get_many([(x + dx * i, y + dy * i) for i in range(len(string))]) == list(string)
 
 def task1(lines):
     g = Grid(lines, sep="")
-    base_dirs = [(0, 1), (1, 0), (1, 1), (-1, 1)]
-    return sum(check_string(g, x, y, dx, dy, "XMAS") for x, y in g.iterate_xy() for dx, dy in base_dirs)
+    return sum(check_string(g, x, y, dx, dy, "XMAS") for x, y in g.iterate_xy() for dx, dy in ALL_DIRS)
 
 def check_cross(g, x, y):
     if g.get(x, y) != "A":
