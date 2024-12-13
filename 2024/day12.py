@@ -33,6 +33,12 @@ def get_perimeter(g: Grid, x, y):
 
     return perim
 
+def is_outside_corner(same, x, y, dx, dy):
+    return (x + dx, y) not in same and (x, y + dy) not in same
+
+def is_inside_corner(same, x, y, dx, dy):
+    return (x + dx, y) in same and (x, y + dy) in same and (x + dx, y + dy) not in same
+
 def get_sides(g: Grid, x, y):
     # num corners == num sides
     corners = 0
@@ -42,48 +48,16 @@ def get_sides(g: Grid, x, y):
             search = [(i + dx, j + dy) for dx, dy in ALL_DIRS]
             same = [ (a, b) for a, b in search if g.get(a, b) is not None and g.get(a, b)[1] == (x, y) ]
 
-            # outer corners
-            corners += (i + 1, j) not in same and (i, j + 1) not in same
-            corners += (i + 1, j) not in same and (i, j - 1) not in same
-            corners += (i - 1, j) not in same and (i, j + 1) not in same
-            corners += (i - 1, j) not in same and (i, j - 1) not in same
-
-            # inner corners
-            corners += (i + 1, j) in same and (i, j + 1) in same and (i + 1, j + 1) not in same
-            corners += (i - 1, j) in same and (i, j + 1) in same and (i - 1, j + 1) not in same
-            corners += (i + 1, j) in same and (i, j - 1) in same and (i + 1, j - 1) not in same
-            corners += (i - 1, j) in same and (i, j - 1) in same and (i - 1, j - 1) not in same
+            corners += sum(is_inside_corner(same, i, j, dx, dy) or is_outside_corner(same, i, j, dx, dy) for dx, dy in DIAG_DIRS)
 
     return corners
 
 
 def task1(g: Grid):
-    join_plots(g)
-    price = 0
-
-    for x, y in g.iterate_xy():
-        _, origin = g.get(x, y)
-
-        if origin == (x, y):
-            area = get_area(g, x, y)
-            perim = get_perimeter(g, x, y)
-            price += area * perim
-
-    return price
+    return sum(get_area(g, x, y) * get_perimeter(g, x, y) for x, y in g.iterate_xy() if g.get(x, y)[1] == (x, y))
 
 def task2(g: Grid):
-    join_plots(g)
-    price = 0
-
-    for x, y in g.iterate_xy():
-        _, origin = g.get(x, y)
-
-        if origin == (x, y):
-            area = get_area(g, x, y)
-            sides = get_sides(g, x, y)
-            price += area * sides
-
-    return price
+    return sum(get_area(g, x, y) * get_sides(g, x, y) for x, y in g.iterate_xy() if g.get(x, y)[1] == (x, y))
 
 if __name__ == "__main__":
     lines = get_input("sample-12-01")
@@ -94,6 +68,8 @@ if __name__ == "__main__":
 
     g = Grid(lines, sep="  ")
     g = g.map(lambda c: (c, None))
+
+    join_plots(g)
     
     print(task1(g.copy()))
     print(task2(g.copy()))
