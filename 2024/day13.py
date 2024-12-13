@@ -1,47 +1,20 @@
 from helpers import *
 import re
-import cmath
+
+def get_toks(a, c, b, d, p, q, add=0):
+    p += add
+    q += add
+
+    x = (b*q-d*p) / (b*c - a*d)
+    y = (a*q-c*p) / (a*d - b*c)
+
+    return int(x*3 + y) if x == int(x) and y == int(y) else 0
 
 def task1(data):
-
-    toks = 0
-
-    for a, c, b, d, p, q in data:
-
-        x = (b*q-d*p) / (b*c - a*d)
-        y = (a*q-c*p) / (a*d - b*c)
-
-        # j = int(j)
-
-        # print(i, j)
-
-        if a * int(x) + b * int(y) == p and c * int(x) + d * int(y) == q:
-            # print(x, y)
-            toks += x*3 + y
-
-    return toks
+    return sum(get_toks(*d) for d in data)
 
 def task2(data):
-
-    toks = 0
-
-    for a, c, b, d, p, q in data:
-
-        p += 10000000000000
-        q += 10000000000000
-
-        x = (b*q-d*p) / (b*c - a*d)
-        y = (a*q-c*p) / (a*d - b*c)
-
-        # j = int(j)
-
-        # print(i, j)
-
-        if a * int(x) + b * int(y) == p and c * int(x) + d * int(y) == q:
-            # print(x, y)
-            toks += x*3 + y
-
-    return toks
+    return sum(get_toks(*d, add=10000000000000) for d in data)
 
 if __name__ == "__main__":
     lines = get_input("sample-13")
@@ -53,8 +26,6 @@ if __name__ == "__main__":
         a, c = re.findall("Button A: X\+([0-9]*), Y\+([0-9]*)", lines[i])[0]
         b, d = re.findall("Button B: X\+([0-9]*), Y\+([0-9]*)", lines[i+1])[0]
         p, q = re.findall("Prize: X=([0-9]*), Y=([0-9]*)", lines[i+2])[0]
-
-        
 
         data.append((float(a), float(c), float(b), float(d), float(p), float(q)))
 
