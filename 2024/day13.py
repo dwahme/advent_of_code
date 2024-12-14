@@ -1,5 +1,4 @@
 from helpers import *
-import re
 
 def get_toks(a, c, b, d, p, q, add=0):
     p += add
@@ -23,11 +22,11 @@ if __name__ == "__main__":
 
     data = []
     for i in range(0, len(lines), 4):
-        a, c = re.findall("Button A: X\+([0-9]*), Y\+([0-9]*)", lines[i])[0]
-        b, d = re.findall("Button B: X\+([0-9]*), Y\+([0-9]*)", lines[i+1])[0]
-        p, q = re.findall("Prize: X=([0-9]*), Y=([0-9]*)", lines[i+2])[0]
+        a, c = tuple(find_nums(lines[i]))
+        b, d = tuple(find_nums(lines[i+1]))
+        p, q = tuple(find_nums(lines[i+2]))
 
-        data.append((float(a), float(c), float(b), float(d), float(p), float(q)))
+        data.append((a,c,b,d,p,q))
 
     # print(data)
     
