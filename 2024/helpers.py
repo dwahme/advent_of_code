@@ -1,5 +1,6 @@
 from typing import Any, Iterable, Tuple
 from numbers import Number
+import re
 
 def _reduce_list(arg):
     if type(arg) == list and len(arg) > 2:
@@ -31,3 +32,6 @@ def flatten(nested_list: Iterable[Iterable[Any]]):
 
 def ADD(tup1: Tuple[Number, Number], tup2: Tuple[Number, Number]):
     return (tup1[0] + tup2[0], tup1[1] + tup1[2])
+
+def find_nums(s: str, convert_to=float):
+    return [ convert_to(x) for x in re.findall(r'[-+]?\d*\.?\d+|[-+]?\d+', s)]
