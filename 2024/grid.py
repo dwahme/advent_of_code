@@ -40,7 +40,7 @@ class Grid:
         return self
     
     def iterate_xy(self):
-        return ((x, y) for y in range(len(self.grid)) for x in range(len(self.grid)))
+        return ((x, y) for y in range(len(self.grid)) for x in range(len(self.grid[y])))
 
     def get_many(self, xys):
         return [ self.get(x, y) for x, y in xys ]
