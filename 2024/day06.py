@@ -1,6 +1,5 @@
 from helpers import *
 from grid import *
-import time
 
 DIRS = [DOWN, RIGHT, UP, LEFT]
 
@@ -47,7 +46,4 @@ if __name__ == "__main__":
     start = [pos for pos in g.iterate_xy() if g.get(*pos) == "^"][0]
     
     print(task1(g.copy(), start))
-
-    t = time.time()
     print(task2(g.copy(), start))
-    print(f"elapsed: {time.time() - t}")
