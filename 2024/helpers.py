@@ -30,10 +30,10 @@ def get_input(file_code):
 def flatten(nested_list: Iterable[Iterable[Any]]):
     return [x for xs in nested_list for x in xs]
 
-def ADD(tup1: Tuple[Number, Number], tup2: Tuple[Number, Number]):
-    return (tup1[0] + tup2[0], tup1[1] + tup2[1])
+def ADD(*tups: Tuple[Number, Number]):
+    return (sum(a for a, _ in tups), sum(b for _, b in tups))
 
-def SCALE(tup: Tuple[Number, Number], scale):
+def SCALE(tup: Tuple[Number, Number], scale: Number):
     return (tup[0] * scale, tup[1]  * scale)
 
 def find_nums(s: str, convert_to=float):

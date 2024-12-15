@@ -15,7 +15,7 @@ def can_push(g: Grid, pos, dir):
     
     extra = True
     if dir in {UP, DOWN} and target in "[]":
-        extra = can_push(g, ADD(ADD(pos, extra_dir(target)), dir), dir)
+        extra = can_push(g, ADD(pos, dir, extra_dir(target)), dir)
 
     return can_push(g, ADD(pos, dir), dir) and extra
 
@@ -23,7 +23,7 @@ def push(g: Grid, pos, dir):
     target = g.get(*ADD(pos, dir))
 
     if dir in {UP, DOWN} and target in "[]":
-        push(g, ADD(ADD(pos, extra_dir(target)), dir), dir)
+        push(g, ADD(pos, dir, extra_dir(target)), dir)
 
     if target in "[]O":
         push(g, ADD(pos, dir), dir)
