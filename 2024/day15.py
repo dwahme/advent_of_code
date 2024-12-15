@@ -17,8 +17,7 @@ def scale(c):
     if c == "@": return "@."
     return None
 
-def check_push_r(g: Grid, pos, dir):
-    
+def can_push(g: Grid, pos, dir):
     target = g.get(*ADD(pos, dir))
 
     if target == "#": return False
@@ -26,23 +25,20 @@ def check_push_r(g: Grid, pos, dir):
     
     extra = True
     if dir in {UP, DOWN} and target in "[]":
-        extra = check_push_r(g, ADD(ADD(pos, extra_dir(target)), dir), dir)
+        extra = can_push(g, ADD(ADD(pos, extra_dir(target)), dir), dir)
 
-    return check_push_r(g, ADD(pos, dir), dir) and extra
+    return can_push(g, ADD(pos, dir), dir) and extra
 
-def push_r(g: Grid, pos, dir):
-
-    me = g.get(*pos)
+def push(g: Grid, pos, dir):
     target = g.get(*ADD(pos, dir))
 
-    # Check if we need to push an extra side of a box
     if dir in {UP, DOWN} and target in "[]":
-        push_r(g, ADD(ADD(pos, extra_dir(target)), dir), dir)
+        push(g, ADD(ADD(pos, extra_dir(target)), dir), dir)
 
     if target in "[]O":
-        push_r(g, ADD(pos, dir), dir)
+        push(g, ADD(pos, dir), dir)
 
-    g.set(*ADD(pos, dir), me)
+    g.set(*ADD(pos, dir), g.get(*pos))
     g.set(*pos, ".")
 
 def sim(g: Grid, moves):
@@ -50,10 +46,9 @@ def sim(g: Grid, moves):
 
     for m in moves:
         d = get_move(m)
-        can_push = check_push_r(g, pos, d)
 
-        if can_push:
-            push_r(g, pos, d)
+        if can_push(g, pos, d):
+            push(g, pos, d)
             pos = ADD(pos, d)
 
     return sum(x+y*100 for x, y in g.iterate_xy() if g.get(x, y) in "O[")
