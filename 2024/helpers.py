@@ -31,7 +31,7 @@ def flatten(nested_list: Iterable[Iterable[Any]]):
     return [x for xs in nested_list for x in xs]
 
 def ADD(tup1: Tuple[Number, Number], tup2: Tuple[Number, Number]):
-    return (tup1[0] + tup2[0], tup1[1] + tup1[2])
+    return (tup1[0] + tup2[0], tup1[1] + tup2[1])
 
 def find_nums(s: str, convert_to=float):
     return [ convert_to(x) for x in re.findall(r'[-+]?\d*\.?\d+|[-+]?\d+', s)]

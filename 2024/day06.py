@@ -1,76 +1,53 @@
 from helpers import *
+from grid import *
+import time
 
-GUARDS = "^>V<"
-DX_DYS = [(0, -1), (1, 0), (0, 1), (-1, 0)]
+DIRS = [DOWN, RIGHT, UP, LEFT]
 
-def get_next_move(grid, guard_x, guard_y):
-    dx, dy = DX_DYS[GUARDS.index(grid[guard_y][guard_x])]
-    return guard_x + dx, guard_y + dy
-
-def dump_grid(grid):
-    for line in grid:
-        print("".join(line))
-
-def run_sim(starting_grid, cur_x, cur_y, barrier_x=None, barrier_y=None):
-
-    grid = [l.copy() for l in starting_grid]
-    
-    if barrier_x is not None and barrier_y is not None:
-        grid[barrier_y][barrier_x] = "O"
-
+def run_sim(g: Grid, pos):
+    dir_idx = 0
     move_list = set()
 
     while True:
-        new_x, new_y = get_next_move(grid, cur_x, cur_y)
+        new_pos = ADD(pos, DIRS[dir_idx])
 
-        # infinite loop detected
-        move = ((cur_x, cur_y), (new_x, new_y))
+        # infinite loop
+        move = (pos, new_pos)
         if move in move_list:
-            return grid, True
+            return g, True
 
         # guard walked off grid
-        if not (0 <= new_y < len(grid)) or not (0 <= new_x < len(grid[new_y])):
-            grid[cur_y][cur_x] = "X"
-            return grid, False
-
+        if not g.in_bounds(*new_pos):
+            g.set(*pos, "X")
+            return g, False
+        
         # rotate the guard
-        if grid[new_y][new_x] == "#" or grid[new_y][new_x] == "O":
-            grid[cur_y][cur_x] = GUARDS[(GUARDS.index(grid[cur_y][cur_x]) + 1) % len(GUARDS)]
+        if g.get(*new_pos) in "#O":
+            dir_idx = (dir_idx + 1) % len(DIRS)
 
         # move the guard
         else:
-            grid[new_y][new_x], grid[cur_y][cur_x] = grid[cur_y][cur_x], "X"
+            g.set(*pos, "X")
             move_list.add(move)
-            cur_x, cur_y = new_x, new_y
+            pos = new_pos
 
-    return None
+def task1(g: Grid, start):
+    return sum([g.get(*pos) == "X" for pos in run_sim(g, start)[0].iterate_xy()])
 
-def task1(grid, start_x, start_y):
-    new_grid, _ = run_sim(grid, start_x, start_y)
-    return sum([c == "X" for row in new_grid for c in row])
-
-
-def task2(grid, start_x, start_y):
-
-    total = 0
-
-    solved_grid, _ = run_sim(grid, start_x, start_y)
-    solved_grid[start_y][start_x] = "^"
-
-    for y in range(len(grid)):
-        for x in range(len(grid[y])):
-            if solved_grid[y][x] == "X":
-                _, loop_detected = run_sim(grid, start_x, start_y, x, y)
-                total += loop_detected
-
-    return total
+def task2(g: Grid, start):
+    solved = run_sim(g.copy(), start)[0]
+    return sum(run_sim(g.copy().set(*pos, "O"), start)[1] for pos in g.iterate_xy() if g.get(*pos) not in "^#" and solved.get(*pos) == "X")
 
 if __name__ == "__main__":
+    lines = get_input("sample-06")
     lines = get_input("06")
-    lines = [list(l.strip()) for l in lines]
+    lines = [l.strip() for l in lines]
 
-    start_y = [y for y in range(len(lines)) if "^" in lines[y]][0]
-    start_x = [x for x in range(len(lines[start_y])) if "^" in lines[start_y][x]][0]
+    g = Grid(lines, sep="")
+    start = [pos for pos in g.iterate_xy() if g.get(*pos) == "^"][0]
     
-    print(task1(lines, start_x, start_y))
-    print(task2(lines, start_x, start_y))
+    print(task1(g.copy(), start))
+
+    t = time.time()
+    print(task2(g.copy(), start))
+    print(f"elapsed: {time.time() - t}")
