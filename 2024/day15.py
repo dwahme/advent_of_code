@@ -1,21 +1,11 @@
 from helpers import *
 from grid import *
 
-MOVES = "v^<>"
-DIRS = [UP, DOWN, LEFT, RIGHT]
-
-def get_move(m):
-    return DIRS[MOVES.index(m)]
+DIR_MAP = { "^": UP, "v": DOWN, "<": LEFT, ">": RIGHT }
+SCALEUP = { "#": "##", "O": "[]", ".": "..", "@": "@." }
 
 def extra_dir(target):
     return RIGHT if target == "[" else LEFT
-
-def scale(c):
-    if c == "#": return "##"
-    if c == "O": return "[]"
-    if c == ".": return ".."
-    if c == "@": return "@."
-    return None
 
 def can_push(g: Grid, pos, dir):
     target = g.get(*ADD(pos, dir))
@@ -45,7 +35,7 @@ def sim(g: Grid, moves):
     pos = [p for p in g.iterate_xy() if g.get(*p) == "@"][0]
 
     for m in moves:
-        d = get_move(m)
+        d = DIR_MAP[m]
 
         if can_push(g, pos, d):
             push(g, pos, d)
@@ -57,7 +47,7 @@ def task1(g: Grid, moves):
     return sim(g, moves)
 
 def task2(g: Grid, moves):
-    g = g.map(scale)
+    g = g.map(lambda x: SCALEUP[x])
     g.grid = [flatten(l) for l in g.grid]
 
     return sim(g, moves)

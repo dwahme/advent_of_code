@@ -1,7 +1,7 @@
 from helpers import *
 from grid import *
 
-DIRS = [DOWN, RIGHT, UP, LEFT]
+DIRS = [UP, RIGHT, DOWN, LEFT]
 
 def run_sim(g: Grid, pos):
     dir_idx = 0
