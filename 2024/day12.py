@@ -54,7 +54,7 @@ if __name__ == "__main__":
     lines = get_input("12")
     lines = [l.strip() for l in lines]
 
-    g = Grid(lines, sep="")
+    g = Grid(lines)
     plots = join_plots(g)
     
     print(task1(plots))

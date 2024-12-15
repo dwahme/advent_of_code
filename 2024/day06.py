@@ -42,7 +42,7 @@ if __name__ == "__main__":
     lines = get_input("06")
     lines = [l.strip() for l in lines]
 
-    g = Grid(lines, sep="")
+    g = Grid(lines)
     start = [pos for pos in g.iterate_xy() if g.get(*pos) == "^"][0]
     
     print(task1(g.copy(), start))

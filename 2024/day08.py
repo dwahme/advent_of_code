@@ -2,7 +2,7 @@ from helpers import *
 from grid import *
 
 def task1(lines):
-    g = Grid(lines, sep="")
+    g = Grid(lines)
     out = g.map(lambda _: ".")
 
     for x, y in g.iterate_xy():
@@ -16,7 +16,7 @@ def task1(lines):
     return sum(out.get(x, y) == "#" for x, y in out.iterate_xy())
 
 def task2(lines):
-    g = Grid(lines, sep="")
+    g = Grid(lines)
     out = g.map(lambda _: ".")
 
     for x, y in g.iterate_xy():

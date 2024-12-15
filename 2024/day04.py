@@ -5,7 +5,7 @@ def check_string(g, x, y, dx, dy, string):
     return g.get_many([(x + dx * i, y + dy * i) for i in range(len(string))]) == list(string)
 
 def task1(lines):
-    g = Grid(lines, sep="")
+    g = Grid(lines)
     return sum(check_string(g, x, y, dx, dy, "XMAS") for x, y in g.iterate_xy() for dx, dy in ALL_DIRS)
 
 def check_cross(g, x, y):

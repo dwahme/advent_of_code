@@ -15,7 +15,7 @@ ALL_DIRS = CARDINAL_DIRS + DIAG_DIRS
 
 class Grid:
 
-    def __init__(self, data, sep=","):
+    def __init__(self, data, sep=""):
         self.grid = [ list(row).copy() for row in data ]
         self.sep = sep
 
