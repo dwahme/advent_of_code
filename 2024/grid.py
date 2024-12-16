@@ -51,6 +51,9 @@ class Grid:
     def map_xy(self, f):
         return Grid([[ f(x, y) for x in range(len(self.grid[y])) ] for y in range(len(self.grid))], sep=self.sep)
 
+    def find(self, val):
+        return [p for p in self.iterate_xy() if self.get(*p) == val]
+
 if __name__ == "__main__":
     d = [ [1,2,3], [4,5,6], [7,8,9] ]
     g = Grid(d, "")
