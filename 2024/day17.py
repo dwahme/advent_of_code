@@ -10,8 +10,6 @@ class Computer:
         self.program = program
         self.instr_pointer = 0
         self.std_out = []
-        self.check_out = False
-        self.check_out_pos = 0
     
     def combo(self, input):
         if 0 <= input <= 3:
@@ -46,7 +44,6 @@ class Computer:
             # out
             case 5:
                 self.std_out.append(self.combo(input) % 8)
-                self.check_out = True
             # bdv
             case 6:
                 self.b = floor(self.a / (2 ** self.combo(input)))
