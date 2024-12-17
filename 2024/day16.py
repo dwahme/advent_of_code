@@ -1,70 +1,39 @@
 from helpers import *
 from grid import *
-from bisect import insort_left
 
-def search(g: Grid, start, goal):
-    
-    insort_key = lambda tup: tup[2]
-    to_visit = [(start, RIGHT, 0, [(start, RIGHT)])]
+def get_next_nodes_func(g: Grid):
 
-    # (pos, dir): (best_score, list of paths to pos)
-    visited = {}
-    min_score = None
+    def get_next(cur_node):
+        next_nodes = []
 
-    while to_visit:
-        pos, dir, score, path = to_visit.pop(0)
+        p, d = cur_node
 
-        if min_score is None and pos == goal:
-            min_score = score
-        
-        # path is too long, stop searching
-        if min_score is not None and score > min_score:
-            break
+        if g.get(*ADD(p, d)) != "#":
+            next_nodes.append(((ADD(p, d), d), 1))
 
-        new_path = path + [(pos, dir)]
-
-        if (pos, dir) in visited:
-            cur_score, cur_paths = visited[(pos, dir)]
-
-            if score < cur_score:
-                visited[(pos, dir)] = (score, [new_path])
-            elif score == cur_score:
-                cur_paths.append(new_path)
-            else:
-                continue
-        else:
-            visited[(pos, dir)] = (score, [new_path])
-        
-        # try move forward
-        if g.get(*ADD(pos, dir)) != "#":
-            item = (ADD(pos, dir), dir, score + 1, new_path)
-            insort_left(to_visit, item, key=insort_key)
-
-        # try turn
-        turns = [RIGHT, LEFT] if dir in {UP, DOWN} else [UP, DOWN]
+        turns = [RIGHT, LEFT] if d in {UP, DOWN} else [UP, DOWN]
         for t in turns:
-            item = (pos, t, score + 1000, new_path)
-            insort_left(to_visit, item, key=insort_key)
+            next_nodes.append(((p, t), 1000))
+        
+        return next_nodes
 
-    path_scores = [visited[p, d] for p, d in visited.keys() if p == goal]
-    min_score = path_scores[0][0]
-    paths = flatten([p for _, p in path_scores])
+    return get_next
 
-    return min_score, paths
-
+def get_goal_func(end):
+    return lambda node: node[0] == end
 
 def task1(g: Grid):
 
     pos = g.find("S")[0]
     goal = g.find("E")[0]
 
-    return search(g, pos, goal)[0]
+    return a_star((pos, RIGHT), get_goal_func(goal), get_next_nodes_func(g))[0]
 
 def task2(g: Grid):
 
     pos = g.find("S")[0]
     goal = g.find("E")[0]
-    paths = search(g, pos, goal)[1]
+    paths = a_star((pos, RIGHT), get_goal_func(goal), get_next_nodes_func(g), allow_multipath=True)[1]
 
     return len(set(p for path in paths for p, _ in path))
 
