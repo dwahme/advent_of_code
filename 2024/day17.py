@@ -12,49 +12,25 @@ class Computer:
         self.std_out = []
     
     def combo(self, input):
-        if 0 <= input <= 3:
-            return input
-        if input == 4:
-            return self.a
-        if input == 5:
-            return self.b
-        if input == 6:
-            return self.c
+        if 0 <= input <= 3: return input
+        if input == 4: return self.a
+        if input == 5: return self.b
+        if input == 6: return self.c
     
     def instr(self, op, input):
         next_instr = None
 
         match op:
-            # adv (div)
-            case 0:
-                self.a = floor(self.a / (2 ** self.combo(input)))
-            # bxl (bit xor)
-            case 1:
-                self.b = self.b ^ input
-            # bst (bit mod)
-            case 2:
-                self.b = self.combo(input) % 8
-            # jnz
-            case 3:
-                if self.a != 0:
-                    next_instr = input
-            # bxc (bit xor)
-            case 4:
-                self.b = self.b ^ self.c
-            # out
-            case 5:
-                self.std_out.append(self.combo(input) % 8)
-            # bdv
-            case 6:
-                self.b = floor(self.a / (2 ** self.combo(input)))
-            # cdv
-            case 7:
-                self.c = floor(self.a / (2 ** self.combo(input)))
-        
-        if next_instr is None:
-            next_instr = self.instr_pointer + 2
-        
-        self.instr_pointer = next_instr
+            case 0: self.a = self.a >> self.combo(input)
+            case 1: self.b = self.b ^ input
+            case 2: self.b = self.combo(input) % 8
+            case 3: next_instr = input if self.a != 0 else next_instr
+            case 4: self.b = self.b ^ self.c
+            case 5: self.std_out.append(self.combo(input) % 8)
+            case 6: self.b = self.a >> self.combo(input)
+            case 7: self.c = self.a >> self.combo(input)
+
+        self.instr_pointer = self.instr_pointer + 2 if next_instr is None else next_instr
 
     def run(self):
         while self.instr_pointer < len(program):
@@ -67,9 +43,7 @@ class Computer:
 
 
 def task1(a, b, c, program):
-    com = Computer(a, b, c, program)
-    out = com.run()
-
+    out = Computer(a, b, c, program).run()
     return ",".join(str(s) for s in out)
 
 def make_a(chunks):
