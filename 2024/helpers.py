@@ -68,15 +68,9 @@ def a_star(start, goal_func, get_next_nodes_func, allow_multipath=False):
             min_score = score
 
         if node in visited:
-            prev_score, prev_paths = visited[node]
-
-            # new best path to node
-            if score < prev_score:
-                visited[node] = (score, [path])
-
             # we have multiple shortest paths to this node
-            elif score == prev_score and allow_multipath:
-                prev_paths.append(path)
+            if allow_multipath and score == visited[node][0]:
+                visited[node][1].append(path)
 
             # this path is not the best path to the node, no need to continue
             else:
