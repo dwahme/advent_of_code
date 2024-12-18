@@ -3,7 +3,7 @@ from grid import *
 
 def get_next_nodes_func(g: Grid):
 
-    def get_next(cur_node, _):
+    def get_next(cur_node):
         next_nodes = []
 
         p, d = cur_node

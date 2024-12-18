@@ -85,7 +85,7 @@ def a_star(start, goal_func, get_next_nodes_func, allow_multipath=False):
             # This is the first time we've seen this node, assume it's best path
             visited[node] = (score, [path])
         
-        for new_node, add_score in get_next_nodes_func(node, path):
+        for new_node, add_score in get_next_nodes_func(node):
             item = (new_node, score + add_score, path + [new_node])
             insort_left(to_visit, item, key=lambda tup: tup[1])
     
