@@ -48,7 +48,7 @@ def a_star(start, goal_func, get_next_nodes_func, allow_multipath=False):
     goal_func: a function that returns whether a node is the goal. Can be "lamda x: x == goal"
     get_next_nodes_func: a function that returns the next nodes to try and their additional cost
         - if next_score contains a heuristic, this is a*, otherwise, djikstra
-        - can just be "lambda cur_node, path: [(next_node, next_score), ...]"
+        - can just be "lambda cur_node: [(next_node, next_score), ...]"
     allow_multipath: whether or not we want to allow multiple shortest paths to the goal
     """
 
