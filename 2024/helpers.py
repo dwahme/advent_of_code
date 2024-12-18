@@ -48,7 +48,7 @@ def a_star(start, goal_func, get_next_nodes_func, allow_multipath=False):
     goal_func: a function that returns whether a node is the goal. Can be "lamda x: x == goal"
     get_next_nodes_func: a function that returns the next nodes to try and their additional cost
         - if next_score contains a heuristic, this is a*, otherwise, djikstra
-        - can just be "lambda cur_node: [(next_node, next_score), ...]"
+        - can just be "lambda cur_node, path: [(next_node, next_score), ...]"
     allow_multipath: whether or not we want to allow multiple shortest paths to the goal
     """
 
@@ -85,11 +85,14 @@ def a_star(start, goal_func, get_next_nodes_func, allow_multipath=False):
             # This is the first time we've seen this node, assume it's best path
             visited[node] = (score, [path])
         
-        for new_node, add_score in get_next_nodes_func(node):
+        for new_node, add_score in get_next_nodes_func(node, path):
             item = (new_node, score + add_score, path + [new_node])
             insort_left(to_visit, item, key=lambda tup: tup[1])
     
     path_scores = [path_score for node, path_score in visited.items() if goal_func(node)]
+    if not path_scores:
+        return -1, None
+
     min_score = path_scores[0][0]
     paths = flatten([p for _, p in path_scores])
 
