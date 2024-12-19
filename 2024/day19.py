@@ -8,7 +8,7 @@ def find_next_word(s, patterns):
 def task1(designs, patterns):
     return sum(find_next_word(d, patterns) > 0 for d in designs)
 
-def task2():
+def task2(designs, patterns):
     return sum(find_next_word(d, patterns) for d in designs)
 
 if __name__ == "__main__":
@@ -20,4 +20,4 @@ if __name__ == "__main__":
     designs = [ l.strip() for l in lines[2:] ]
 
     print(task1(designs, patterns))
-    print(task2())
+    print(task2(designs, patterns))
