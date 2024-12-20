@@ -26,7 +26,7 @@ def get_lines(filename):
         return lines
 
 def get_input(file_code):
-    return get_lines(f"inputs\{file_code}.in")
+    return get_lines(f"inputs\\{file_code}.in")
 
 def flatten(nested_list: Iterable[Iterable[Any]]):
     return [x for xs in nested_list for x in xs]

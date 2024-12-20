@@ -35,7 +35,7 @@ if __name__ == "__main__":
     set_up_file_if_not_exists(path, python_filename, "template.py")
 
     print()
-    print(f"Setting up input files for {args.inputs} input")
+    print(f"Setting up input files for 1 input")
     input_file = os.path.join("inputs", f"{day_str}.in")
     set_up_file_if_not_exists(path, input_file)
 
