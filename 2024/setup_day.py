@@ -22,7 +22,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Set up day N for Advent of Code")
     parser.add_argument("day", action="store", type=int, help="The day of Advent of Code to set up")
     parser.add_argument("-s", action="store", dest="samples", type=int, help="The number of sample input files to set up", default=0)
-    parser.add_argument("-i", action="store", dest="inputs", type=int, help="The number of input files to set up", default=0)
 
     args = parser.parse_args()
 
@@ -35,6 +34,11 @@ if __name__ == "__main__":
     python_filename = f"day{day_str}.py"
     set_up_file_if_not_exists(path, python_filename, "template.py")
 
+    print()
+    print(f"Setting up input files for {args.inputs} input")
+    input_file = os.path.join("inputs", f"{day_str}.in")
+    set_up_file_if_not_exists(path, input_file)
+
     if args.samples:
         print()
         print(f"Setting up sample input files for {args.samples} samples")
@@ -46,15 +50,3 @@ if __name__ == "__main__":
             for i in range(1, args.samples + 1):
                 sample_file = os.path.join("inputs", f"sample-{day_str}-{i:02}.in")
                 set_up_file_if_not_exists(path, sample_file)
-
-    if args.inputs:
-        print()
-        print(f"Setting up input files for {args.inputs} input")
-
-        if args.inputs == 1:
-            input_file = os.path.join("inputs", f"{day_str}.in")
-            set_up_file_if_not_exists(path, input_file)
-        else:
-            for i in range(1, args.inputs + 1):
-                input_file = os.path.join("inputs", f"{day_str}-{i:02}.in")
-                set_up_file_if_not_exists(path, input_file)
