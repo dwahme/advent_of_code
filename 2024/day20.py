@@ -27,51 +27,26 @@ def get_dist(a, b):
     bx, by = b
     return abs(bx - ax) + abs(by - ay)
 
-def task1(g: Grid):
+def get_saved(distances, p1, p2):
+    return distances[p2] - distances[p1] - get_dist(p1, p2) if p2 in distances else -1
 
-    saved = {}
+def get_savings(g: Grid, jump):
 
     end = g.find("E")[0]
-
     distances = get_coord_distances(g, end)
 
-    checked = set()
+    return sum(
+        get_saved(distances, p1, ADD(p1, (i, j))) >= 100 
+        for p1 in distances.keys()
+        for i in range(-jump, jump + 1)
+        for j in range(-(jump - abs(i)), jump - abs(i) + 1)
+    )
 
-    to_jump = list(distances.items())
-
-    for i, tup1 in enumerate(to_jump):
-        p1, d1 = to_jump[i]
-
-        for p2, d2 in to_jump[i + 1:]:
-            savings = d2 - d1 - get_dist(p1, p2)
-
-            if savings > 0 and get_dist(p1, p2) <= 2:
-                saved[savings] = saved.get(savings, 0) + 1
-
-    return sum(v for k, v in saved.items() if k >= 100)
+def task1(g: Grid):
+    return get_savings(g, 2)
 
 def task2(g: Grid):
-
-    saved = {}
-
-    end = g.find("E")[0]
-
-    distances = get_coord_distances(g, end)
-
-    checked = set()
-
-    to_jump = list(distances.items())
-
-    for i, tup1 in enumerate(to_jump):
-        p1, d1 = to_jump[i]
-
-        for p2, d2 in to_jump[i + 1:]:
-            savings = d2 - d1 - get_dist(p1, p2)
-
-            if savings > 0 and get_dist(p1, p2) <= 20:
-                saved[savings] = saved.get(savings, 0) + 1
-
-    return sum(v for k, v in saved.items() if k >= 100)
+    return get_savings(g, 20)
 
 if __name__ == "__main__":
     lines = get_input("sample-20")
