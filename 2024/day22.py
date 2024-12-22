@@ -1,33 +1,18 @@
 from helpers import *
 from grid import *
-from functools import cache
 
-def mix(num, secret):
-    return num ^ secret
-
-def prune(num):
-    return num % 16777216
-
-@cache
 def next_secret(secret):
-    # secret = prune(mix(secret, secret << 6))
-    # secret = prune(mix(secret, secret >> 5))
-    # secret = prune(mix(secret, secret << 10))
-    secret = prune(mix(secret, secret * 64))
-    secret = prune(mix(secret, secret // 32))
-    secret = prune(mix(secret, secret * 2048))
+    secret = (secret ^ secret << 6) % 16777216
+    secret = (secret ^ secret >> 5) % 16777216
+    secret = (secret ^ secret << 11) % 16777216
 
     return secret
-
-def price(x):
-    return x % 10
 
 def task1(nums):
 
     tot = 0
 
-    for n in nums:
-        x = n
+    for x in nums:
         for _ in range(2000):
             x = next_secret(x)
         tot += x
@@ -37,8 +22,7 @@ def task1(nums):
 def task2(nums):
     d = {}
 
-    for n in nums:
-        x = n
+    for x in nums:
         prev = None
         deltas = []
         found = set()
@@ -47,7 +31,7 @@ def task2(nums):
             prev = x
             x = next_secret(x)
 
-            deltas.append(price(x) - price(prev))
+            deltas.append(x % 10 - prev % 10)
 
             if len(deltas) > 4:
                 deltas.pop(0)
@@ -55,12 +39,10 @@ def task2(nums):
             if len(deltas) == 4:
                 t = tuple(deltas)
                 if t not in found:
-                    d[t] = d.get(t, 0) + price(x)
+                    d[t] = d.get(t, 0) + x % 10
                     found.add(t)
 
-    # print(d)
-
-    return max(d.items(), key=lambda t: t[1])[1]
+    return max(d.values())
 
 if __name__ == "__main__":
     lines = get_input("sample-22")
