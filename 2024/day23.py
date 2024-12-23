@@ -18,7 +18,7 @@ if __name__ == "__main__":
     connections = [tuple(s.split("-")) for s in lines]
     network = nx.Graph()
     for e in connections:
-        g.add_edge(*e)
+        network.add_edge(*e)
 
     print(task1(network))
     print(task2(network))
