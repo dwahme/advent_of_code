@@ -30,7 +30,7 @@ def is_allowed_position(x, y, is_numpad=False):
         return 0 <= x < 3 and 0 <= y < 2 and not (x == 0 and y == 0)
 
 @cache
-def get_key_delta(key, x, y):
+def get_move(key, x, y):
     x += 1 if key == ">" else (-1 if key == "<" else 0)
     y += 1 if key == "v" else (-1 if key == "^" else 0)
     return x, y
@@ -39,9 +39,10 @@ def get_key_delta(key, x, y):
 def get_keypresses(cur_key, dest_key, depth, num_robots):
 
     is_last_robot = depth == num_robots - 1
+    is_first_robot = depth == 0
 
-    cur_x, cur_y = key_to_coord(cur_key, is_numpad=depth == 0)
-    dest_x, dest_y = key_to_coord(dest_key, is_numpad=depth == 0)
+    cur_x, cur_y = key_to_coord(cur_key, is_numpad=is_first_robot)
+    dest_x, dest_y = key_to_coord(dest_key, is_numpad=is_first_robot)
 
     keys_x = get_dir_keys(cur_x, dest_x, "<", ">")
     keys_y = get_dir_keys(cur_y, dest_y, "^", "v")
@@ -57,8 +58,8 @@ def get_keypresses(cur_key, dest_key, depth, num_robots):
         prev = "A"
 
         for key in permutation:
-            tmp_x, tmp_y = get_key_delta(key, tmp_x, tmp_y)
-            if not is_allowed_position(tmp_x, tmp_y, is_numpad=depth == 0):
+            tmp_x, tmp_y = get_move(key, tmp_x, tmp_y)
+            if not is_allowed_position(tmp_x, tmp_y, is_numpad=is_first_robot):
                 path_is_ok = False
                 break
 
@@ -78,7 +79,7 @@ def task1(codes):
     for code in codes:
         p_len = 0
         prev_key = "A"
-        for i, c in enumerate(code):
+        for c in code:
             presses = get_keypresses(prev_key, c, 0, 3)
             p_len += presses
             prev_key = c
@@ -93,7 +94,7 @@ def task2(codes):
     for code in codes:
         p_len = 0
         prev_key = "A"
-        for i, c in enumerate(code):
+        for c in code:
             presses = get_keypresses(prev_key, c, 0, 26)
             p_len += presses
             prev_key = c
