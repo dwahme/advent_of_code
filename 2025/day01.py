@@ -2,35 +2,24 @@ from helpers import *
 from grid import *
 from functools import cache
 
+def do_turns(turns):
+    pos = 50
+    lands_at_0 = 0
+    crosses_0 = 0
+
+    for t in turns:
+        for _ in range(int(t[1:])):
+            pos += 1 if t[0] == "R" else -1
+            crosses_0 += 1 if pos % 100 == 0 else 0
+        lands_at_0 += 1 if pos % 100 == 0 else 0
+
+    return lands_at_0, crosses_0
+
 def task1(lines):
-    net = 50
-    at_0 = 0
-
-    for l in lines:
-        dir = 1 if l[0] == "R" else -1
-        steps = int(l[1:])
-
-        lands_at_0 = (net + dir * steps) % 100 == 0
-        if lands_at_0:
-            at_0 += 1
-            
-        net += dir * steps
-        
-    return at_0
+    return do_turns(lines)[0]
 
 def task2(lines):
-    net = 50
-    at_0 = 0
-
-    for l in lines:
-        dir = 1 if l[0] == "R" else -1
-        steps = int(l[1:])
-
-        for _ in range(steps):
-            net += dir
-            at_0 += net % 100 == 0
-        
-    return at_0
+    return do_turns(lines)[1]
 
 if __name__ == "__main__":
     # lines = get_input("sample-01")
