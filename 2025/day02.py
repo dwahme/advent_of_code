@@ -9,10 +9,10 @@ def is_repeat(s):
     return any(s[0:sublen] * (len(s) // sublen) == s for sublen in range(1, len(s) // 2 + 1))
 
 def task1(ranges):
-    return sum(i for l in ranges.split(",") for i in range(*map(int, l.split("-"))) if is_twopeat(str(i)))
+    return sum(i for r in ranges.split(",") for i in range(*map(int, r.split("-"))) if is_twopeat(str(i)))
 
 def task2(ranges):
-    return sum(i for l in ranges.split(",") for i in range(*map(int, l.split("-"))) if is_repeat(str(i)))
+    return sum(i for r in ranges.split(",") for i in range(*map(int, r.split("-"))) if is_repeat(str(i)))
 
 if __name__ == "__main__":
     # lines = get_input("sample-02")
