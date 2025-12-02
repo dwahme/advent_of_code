@@ -11,8 +11,8 @@ def is_twopeat(s):
 def is_repeat(s):
     return any(s[0:sublen] * (len(s) // sublen) == s for sublen in range(1, len(s) // 2 + 1))
 
-def search_repeats(start, stop, func):
-    return sum(i for i in range(start, stop + 1) if func(str(i)))
+def search_repeats(start, stop, check_func):
+    return sum(i for i in range(start, stop + 1) if check_func(str(i)))
 
 def task1(lines):
     return sum(search_repeats(*get_range(l), is_twopeat) for l in lines.split(","))
