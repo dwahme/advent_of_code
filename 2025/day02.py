@@ -19,7 +19,7 @@ if __name__ == "__main__":
     lines = get_input("02")
     lines = [l.strip() for l in lines]
 
-    ranges = [range(int(r.split("-")[0]), int(r.split("-")[1])) for r in lines[0].split(",")]
+    ranges = [range(int(r.split("-")[0]), int(r.split("-")[1]) + 1) for r in lines[0].split(",")]
     
     print(task1(ranges))
     print(task2(ranges))
