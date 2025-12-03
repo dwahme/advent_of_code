@@ -3,42 +3,15 @@ from grid import *
 from functools import cache
 
 @cache
-def max_joltage(s, remaining_digits):
-
-    ns = [int(s) for s in s]
-
-    if remaining_digits == 1:
-        return max(ns)
-    
-    best = -1
-    for idx, n in enumerate(ns[:-remaining_digits + 1]):
-        best = max(best, n * 10 ** (remaining_digits - 1) + max_joltage(s[idx + 1:], remaining_digits - 1))
-    
-    return best
+def joltage(s, remaining):
+    if remaining == 1: return max(s)
+    return max(d + joltage(s[idx + 1:], remaining - 1) for idx, d in enumerate(s[:-remaining + 1]))
 
 def task1(lines):
-    total = 0
-
-    for l in lines:
-        ns = [int(s) for s in l]
-        jolt = max_joltage(l, 2)
-
-        total += jolt
-
-    return total
-
-
+    return sum(int(joltage(l, 2)) for l in lines)
 
 def task2(lines):
-    total = 0
-
-    for l in lines:
-        ns = [int(s) for s in l]
-        jolt = max_joltage(l, 12)
-
-        total += jolt
-
-    return total
+    return sum(int(joltage(l, 12)) for l in lines)
 
 if __name__ == "__main__":
     # lines = get_input("sample-03")
@@ -47,3 +20,4 @@ if __name__ == "__main__":
     
     print(task1(lines))
     print(task2(lines))
+ 
