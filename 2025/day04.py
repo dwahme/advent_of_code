@@ -2,41 +2,29 @@ from helpers import *
 from grid import *
 from functools import cache
 
-def task1(lines):
-    g = Grid(lines)
+def remove(g, replacement):
+    removed = 0
 
     for p in g.iterate_xy():
-
         if g.get(*p) != "@": continue
 
         accesses = g.get_many([ADD(p, d) for d in ALL_DIRS])
         if accesses.count("@") + accesses.count("x") < 4:
-            g.set(*p, "x")
+            g.set(*p, replacement)
+            removed += 1
+    
+    return removed
 
-    return len(g.find("x"))
+def task1(lines):
+    g = Grid(lines)
+    return remove(g, "x")
 
 def task2(lines):
-    total = 0
-
     g = Grid(lines)
 
-    while True:
-
-        removed = 0
-
-        for p in g.iterate_xy():
-
-            if g.get(*p) != "@": continue
-
-            accesses = g.get_many([ADD(p, d) for d in ALL_DIRS])
-            if accesses.count("@") < 4:
-                removed += 1
-                g.set(*p, ".")
-
+    total = 0
+    while removed := remove(g, "."):
         total += removed
-
-        if not removed:
-            break
 
     return total
 
