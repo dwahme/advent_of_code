@@ -12,7 +12,7 @@ class Range():
     def __repr__(self):
         return f"Range({self.lo}, {self.hi})"
     
-    def __contains__(self, value: Number) -> bool:
+    def __contains__(self, value) -> bool:
         return value in self.range
 
     def __eq__(self, other: "Range") -> bool:
@@ -28,12 +28,13 @@ class Range():
         return len(self.range)
     
     def has_overlap(self, other: "Range") -> bool:
-        [smaller, bigger] = sorted([self, other])
-        return bigger.lo < smaller.hi
+        return range(max(self.lo, other.lo), min(self.hi, other.hi)) or None
 
     def merge(self, other: "Range"):
-        return Range(min(self.lo, other.lo), max(self.hi, other.hi)) if self.has_overlap(other) else None
-    
+        if not self.has_overlap(other):
+            return None
+        return Range(min(self.lo, other.lo), max(self.hi, other.hi))
+
     def merge_all(ranges: List["Range"]) -> List["Range"]:
         result = []
         rs = sorted(ranges)
