@@ -1,6 +1,6 @@
 from helpers import *
 from grid import *
-from range import *
+from interval import *
 from functools import cache
 
 def task1(lines):
