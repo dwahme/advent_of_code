@@ -29,7 +29,7 @@ class Interval():
         return len(self.range)
     
     def overlaps(self, other: "Interval") -> bool:
-        return range(max(self.lo, other.lo), min(self.hi, other.hi)) or None
+        return bool(range(max(self.lo, other.lo), min(self.hi, other.hi)))
 
     def union(self, other: "Interval"):
         return Interval(min(self.lo, other.lo), max(self.hi, other.hi)) if self.overlaps(other) else None 
