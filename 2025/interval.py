@@ -10,7 +10,7 @@ class Interval():
         self.hi = hi
         self.range = range(lo, hi)
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Interval({self.lo}, {self.hi})"
     
     def __contains__(self, value) -> bool:
@@ -31,7 +31,7 @@ class Interval():
     def overlaps(self, other: "Interval") -> bool:
         return bool(range(max(self.lo, other.lo), min(self.hi, other.hi)))
 
-    def union(self, other: "Interval"):
+    def union(self, other: "Interval") -> "Interval":
         return Interval(min(self.lo, other.lo), max(self.hi, other.hi)) if self.overlaps(other) else None 
 
     def bulk_union(ranges: List["Interval"]) -> List["Interval"]:
