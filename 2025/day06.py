@@ -10,8 +10,8 @@ def calculate(op, nums):
     raise ValueError(f"Invalid operator {op}")
 
 def task1(lines):
-    nums = [ [int(n.strip()) for n in ns.split(" ") if n.strip() ] for ns in lines[:-1] ]
-    ops = [ o.strip() for o in lines[-1].split(" ") if o.strip() ]
+    nums = [ find_nums(l, convert_to=int) for l in lines[:-1] ]
+    ops = [ o.strip() for o in lines[-1].split(" ") if o ]
 
     return sum(calculate(op, (ns[i] for ns in nums)) for i, op in enumerate(ops))
 
