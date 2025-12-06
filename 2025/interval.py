@@ -1,3 +1,4 @@
+from functools import reduce
 from typing import List
 from numbers import Number
 
@@ -27,27 +28,15 @@ class Interval():
     def __len__(self) -> int:
         return len(self.range)
     
-    def has_overlap(self, other: "Interval") -> bool:
-        return range(max(self.lo, other.lo), min(self.hi, other.hi)) or None
+    def overlaps(self, other: "Interval") -> bool:
+        return type(other) == Interval and range(max(self.lo, other.lo), min(self.hi, other.hi)) or None
 
     def union(self, other: "Interval"):
-        if not self.has_overlap(other):
-            return None
-        return Interval(min(self.lo, other.lo), max(self.hi, other.hi))
+        return Interval(min(self.lo, other.lo), max(self.hi, other.hi)) if self.overlaps(other) else None 
 
     def bulk_union(ranges: List["Interval"]) -> List["Interval"]:
-        result = []
-        rs = sorted(ranges)
-
-        for r in rs:
-            if result and r.has_overlap(result[-1]):
-                result[-1] = result[-1].union(r)
-            else:
-                result.append(r)
-
-        return result
+        f = lambda rs, r: rs[:-1] + [rs[-1].union(r)] if rs and r.overlaps(rs[-1]) else rs + [r]
+        return reduce(f, sorted(ranges), [])
 
     def intersect(self, other: "Interval") -> "Interval":
-        if not self.has_overlap(other):
-            return False
-        return Interval(max(self.lo, other.lo), min(self.hi, other.hi))
+        return Interval(max(self.lo, other.lo), min(self.hi, other.hi)) if self.overlaps(other) else None
