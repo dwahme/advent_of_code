@@ -10,33 +10,33 @@ def task1(lines):
     splits = 0
 
     while locs:
-        x, y = locs.pop()
+        pos = locs.pop()
+        nxt = g.get(*pos)
 
-        if g.get(x, y + 1) == "^":
-            locs |= {(x - 1, y + 1), ((x + 1), y + 1)}
+        if nxt == "^":
+            locs |= { ADD(pos, DOWN_L), ADD(pos, DOWN_R) }
             splits += 1
 
-        elif (g.get(x, y + 1)) == ".":
-            locs |= { (x, y + 1) }
+        elif nxt == "." or nxt == "S":
+            locs |= { ADD(pos, DOWN) }
 
-        g.set(x, y, "|")
+        g.set(*pos, "|")
         
     return splits
 
 @cache
-def get_paths(g, x, y):
-    if g.get(x, y) == "^":
-        return get_paths(g, x - 1, y + 1) + get_paths(g, x + 1, y + 1)
-    elif g.get(x, y) == "." or g.get(x, y) == "S":
-        return get_paths(g, x, y + 1)
-    
+def get_paths(g, pos):
+    val = g.get(*pos)
+
+    if val == "^":
+        return get_paths(g, ADD(pos, DOWN_L)) + get_paths(g, ADD(pos, DOWN_R))
+    elif val == "." or val == "S":
+        return get_paths(g, ADD(pos, DOWN))
     return 1
 
 def task2(lines):
     g = Grid(lines)
-
-    locs = g.find("S")
-    return get_paths(g, *locs[0])
+    return get_paths(g, g.find("S")[0])
 
 if __name__ == "__main__":
     # lines = get_input("sample-07")
