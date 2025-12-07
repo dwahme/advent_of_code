@@ -3,26 +3,19 @@ from grid import *
 from interval import *
 from functools import cache
 
+def get_splits(g, pos):
+    val = g.get(*pos)
+    g.set(*pos, "|")
+
+    if val == "^":
+        return get_splits(g, ADD(pos, DOWN_L)) + get_splits(g, ADD(pos, DOWN_R))
+    elif val == "." or val == "S":
+        return get_splits(g, ADD(pos, DOWN))
+    return 1
+
 def task1(lines):
     g = Grid(lines)
-
-    locs = set(g.find("S"))
-    splits = 0
-
-    while locs:
-        pos = locs.pop()
-        nxt = g.get(*pos)
-
-        if nxt == "^":
-            locs |= { ADD(pos, DOWN_L), ADD(pos, DOWN_R) }
-            splits += 1
-
-        elif nxt == "." or nxt == "S":
-            locs |= { ADD(pos, DOWN) }
-
-        g.set(*pos, "|")
-        
-    return splits
+    return get_splits(g, g.find("S")[0])
 
 @cache
 def get_paths(g, pos):
