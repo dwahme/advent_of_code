@@ -103,4 +103,6 @@ class UnionFind:
         return self.parent[p]
 
     def union(self, p, q):
-        self.parent[self.find(p)] = self.find(q)
+        parent_p, parent_q = self.find(p), self.find(q)
+        self.parent[parent_p] = parent_q
+        return parent_q if parent_p != parent_q else None

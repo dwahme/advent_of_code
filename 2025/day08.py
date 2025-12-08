@@ -2,39 +2,21 @@ from helpers import *
 from grid import *
 from interval import *
 from functools import cache
-from collections import defaultdict
+from collections import Counter
 
 def dist(p, q):
-    x1, y1, z1 = p
-    x2, y2, z2 = q
-    return abs(x1 - x2)**2 + abs(y1 - y2)**2 + abs(z1 - z2)**2
+    return sum(abs(a - b)**2 for a, b in zip(p, q))
 
 def task1(points, distances):
     uf = UnionFind(len(points))
-
-    for _, p, q in distances[:1000]:
-        uf.union(p, q)
-
-    dd = defaultdict(int)
-    for i in uf.parent:
-        dd[uf.find(i)] += 1
-
-    sizes = sorted(dd.values())
-    return sizes[-1] * sizes[-2] * sizes[-3]
+    [ uf.union(p, q) for _, p, q in distances[:1000] ]
+    c = Counter(uf.find(i) for i in uf.parent)
+    return reduce(lambda x, p: x * p[1], c.most_common(3), 1)
 
 def task2(points, distances):
     uf = UnionFind(len(points))
-
-    connected = 0
-    for _, p, q in distances:
-        connected += 1 if uf.find(p) != uf.find(q) else 0
-        uf.union(p, q)
-
-        if connected == len(points) - 1:
-            return points[p][0] * points[q][0]
-
-    # we should never get here
-    return None
+    p, q = [ (p, q) for _, p, q in distances if uf.union(p, q) is not None ][-1]
+    return points[p][0] * points[q][0]
 
 if __name__ == "__main__":
     # lines = get_input("sample-08")
