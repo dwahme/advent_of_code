@@ -91,3 +91,16 @@ def a_star(start, goal_func, get_next_nodes_func, allow_multipath=False):
     paths = flatten([p for _, p in path_scores])
 
     return min_score, paths
+
+class UnionFind:
+    def __init__(self, size):
+        self.parent = list(range(size))
+
+    def find(self, p):
+        if self.parent[p] == p:
+            return p
+        self.parent[p] = self.find(self.parent[p])
+        return self.parent[p]
+
+    def union(self, p, q):
+        self.parent[self.find(p)] = self.find(q)
